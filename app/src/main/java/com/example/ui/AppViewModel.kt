@@ -71,7 +71,8 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
     val currentRoute: StateFlow<AppRoute> = _currentRoute.asStateFlow()
 
     private val _routeBackStack = MutableStateFlow<List<AppRoute>>(emptyList())
-    val canNavigateBack: StateFlow<Boolean> = MutableStateFlow(false)
+    private val _canNavigateBack = MutableStateFlow(false)
+    val canNavigateBack: StateFlow<Boolean> = _canNavigateBack.asStateFlow()
 
     private val _okMessage = MutableStateFlow<String?>(null)
     val okMessage: StateFlow<String?> = _okMessage.asStateFlow()
@@ -189,7 +190,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
                 val startRoute = if (res.data.role == "Owner") AppRoute.DASHBOARD else AppRoute.GADAI_BARANG
                 _currentRoute.value = startRoute
                 _routeBackStack.value = emptyList()
-                (canNavigateBack as MutableStateFlow).value = false
+                _canNavigateBack.value = false
                 clearBanners()
                 refreshNextAkad()
             } else {
@@ -201,7 +202,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
     fun logout() {
         _currentUser.value = null
         _routeBackStack.value = emptyList()
-        (canNavigateBack as MutableStateFlow).value = false
+        _canNavigateBack.value = false
         clearBanners()
         _loginError.value = null
     }
@@ -213,7 +214,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
         if (target != _currentRoute.value) {
             val updatedStack = _routeBackStack.value + _currentRoute.value
             _routeBackStack.value = updatedStack
-            (canNavigateBack as MutableStateFlow).value = updatedStack.isNotEmpty()
+            _canNavigateBack.value = updatedStack.isNotEmpty()
             _currentRoute.value = target
         }
         if (target == AppRoute.GADAI_BARANG) refreshNextAkad()
@@ -225,7 +226,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
         val prev = stack.last()
         val nextStack = stack.dropLast(1)
         _routeBackStack.value = nextStack
-        (canNavigateBack as MutableStateFlow).value = nextStack.isNotEmpty()
+        _canNavigateBack.value = nextStack.isNotEmpty()
         _currentRoute.value = prev
         clearBanners()
         return true

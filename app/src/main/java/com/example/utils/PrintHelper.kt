@@ -11,15 +11,21 @@ import com.example.data.db.SesiTutupTokoEntity
 import com.example.data.db.TransaksiGadaiEntity
 
 object PrintHelper {
+    @Volatile
+    private var activeWebView: WebView? = null
 
     fun printHtml(context: Context, jobName: String, html: String) {
         val webView = WebView(context)
+        activeWebView = webView
         webView.webViewClient = object : WebViewClient() {
             override fun onPageFinished(view: WebView, url: String?) {
                 val printManager = context.getSystemService(Context.PRINT_SERVICE) as? PrintManager
                 if (printManager != null) {
                     val adapter = view.createPrintDocumentAdapter(jobName)
                     printManager.print(jobName, adapter, PrintAttributes.Builder().build())
+                }
+                if (activeWebView === view) {
+                    activeWebView = null
                 }
             }
         }

@@ -24,9 +24,11 @@ jobs:
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
 
-      - name: Accept Android SDK licenses
+      - name: Accept Android SDK licenses and ensure SDK platform
+        shell: bash
         run: |
-          yes | sdkmanager --licenses > /dev/null 2>&1 || true
+          set +o pipefail
+          yes | sdkmanager --licenses || true
           sdkmanager "platform-tools" "build-tools;36.0.0" "platforms;android-36.1" || true
 
       - name: Set up Gradle
@@ -35,9 +37,10 @@ jobs:
           gradle-version: '9.3.1'
 
       - name: Prepare debug keystore
+        shell: bash
         run: |
           if [ -f debug.keystore.base64 ]; then
-            base64 -d debug.keystore.base64 > debug.keystore
+            base64 -d debug.keystore.base64 > debug.keystore || true
           fi
           if [ ! -s debug.keystore ]; then
             keytool -genkeypair -v -keystore debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
