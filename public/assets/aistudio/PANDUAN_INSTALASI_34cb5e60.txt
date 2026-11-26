@@ -1,0 +1,30 @@
+AMANAH GADAI SYARIAH — PANDUAN INSTALASI (XAMPP / APACHE + MYSQL)
+
+1. Ekstrak seluruh isi ZIP ini ke folder web server Anda:
+   - Windows XAMPP: C:\xampp\htdocs\amanah_gadai\
+   - Linux/Mac: /opt/lampp/htdocs/amanah_gadai/
+
+2. Nyalakan Apache dan MySQL melalui XAMPP Control Panel.
+
+3. Database MySQL:
+   - Buka http://localhost/phpmyadmin lalu buat/import file amanah_gadai.sql
+   - ATAU langsung buka aplikasi di browser: http://localhost/amanah_gadai/
+     (config/koneksi.php sudah dilengkapi auto-setup database, tabel, dan user default!)
+
+4. Akun Login Default:
+   - Owner: adiministrator / 123456
+   - Kasir: kasir / 123456
+
+5. Konfigurasi Database (jika berbeda dari default XAMPP):
+   Edit file config/koneksi.php pada bagian:
+   $db_host = 'localhost';
+   $db_user = 'root';
+   $db_pass = '';
+   $db_name = 'amanah_gadai';
+
+6. Dokumen PDF Pelanggan (Ukuran Tidak Dibatasi):
+   - Aplikasi tidak membatasi ukuran file PDF (maks. 1 PDF per pelanggan).
+   - Untuk file PDF berukuran sangat besar (> 40 MB) di XAMPP, pastikan nilai
+     upload_max_filesize dan post_max_size di C:\xampp\php\php.ini cukup besar
+     (atau gunakan .user.ini yang sudah disertakan).
+
